@@ -142,7 +142,7 @@
     <style name="CustomizationOptionEntryTitleTextStyle">
         <item name="android:fontFamily">@*android:string/config_headlineFontFamily</item>
         <item name="android:textColor">@color/system_on_surface</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CustomizationOptionEntrySubtitleTextStyle">
