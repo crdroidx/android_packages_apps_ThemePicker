@@ -65,8 +65,40 @@ class ClockRegistryProvider(
     private fun createPluginManager(context: Context): PluginManager {
         return PluginManagerImpl.create(
             context,
+            // Single source of truth: read the allowlist from SystemUI's
+            // config_pluginAllowlist instead of a duplicated hardcoded list,
+            // so a clock only needs allowlisting in one place.
+            loadClockPluginAllowlist(context),
+            PluginEnabler.AlwaysEnabled(),
+            Executors.newSingleThreadExecutor(),
+            UncaughtExceptionPreHandlerManager_Factory.create().get(),
+        )
+    }
+
+    /**
+     * Read the clock plugin allowlist from SystemUI's config_pluginAllowlist so the picker
+     * and SystemUI share one definition. Falls back to a built-in list (including DerpFest
+     * clocks) if the SystemUI resource cannot be read.
+     */
+    private fun loadClockPluginAllowlist(context: Context): List<String> {
+        try {
+            val sysui = context.createPackageContext(SYSTEMUI_PACKAGE, 0)
+            val resId =
+                sysui.resources.getIdentifier("config_pluginAllowlist", "array", SYSTEMUI_PACKAGE)
+            if (resId != 0) {
+                val list = sysui.resources.getStringArray(resId).filterNotNull()
+                if (list.isNotEmpty()) return list
+            }
+        } catch (e: Exception) {
+            // fall through to the built-in list below
+        }
+        return FALLBACK_ALLOWLIST
+    }
+
+    companion object {
+        private const val SYSTEMUI_PACKAGE = "com.android.systemui"
+        private val FALLBACK_ALLOWLIST =
             listOf(
-                // TODO(b/452686190): Combine definition w/ SystemUI
                 "com.android.systemui.clocks.bignum",
                 "com.android.systemui.clocks.calligraphy",
                 "com.android.systemui.clocks.growth",
@@ -75,10 +107,6 @@ class ClockRegistryProvider(
                 "com.android.systemui.clocks.metro",
                 "com.android.systemui.clocks.numoverlap",
                 "com.android.systemui.clocks.weather",
-            ),
-            PluginEnabler.AlwaysEnabled(),
-            Executors.newSingleThreadExecutor(),
-            UncaughtExceptionPreHandlerManager_Factory.create().get(),
-        )
+            )
     }
 }
