@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2026 Paranoid Android
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/system_secondary" />
+    <item android:color="@color/system_secondary_container" />
+</selector>

@@ -56,11 +56,14 @@ import com.android.wallpaper.picker.option.ui.adapter.OptionItemAdapter2
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
 import com.google.android.material.slider.Slider.OnSliderTouchListener
 import java.lang.ref.WeakReference
+import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.flow.Flow
@@ -149,6 +152,23 @@ object ClockFloatingSheetBinder {
                 )
             }
 
+        val clockPresetGroupContainer: View =
+            clockStyleContent.requireViewById(R.id.clock_preset_group_container)
+        val clockPresetGroupToggle: MaterialButtonToggleGroup =
+            clockStyleContent.requireViewById(R.id.clock_preset_group_toggle)
+        val clockPresetGroupButtons =
+            listOf<MaterialButton>(
+                clockStyleContent.requireViewById(R.id.clock_preset_group_button_0),
+                clockStyleContent.requireViewById(R.id.clock_preset_group_button_1),
+            )
+
+        clockPresetGroupButtons.forEach { button ->
+            button.text =
+                button.text.toString().replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                }
+        }
+
         val sliderLabel = appContext.getString(R.string.clock_face_width)
         axisPresetSlider.contentDescription = sliderLabel
 
@@ -161,6 +181,9 @@ object ClockFloatingSheetBinder {
             setColor = { color ->
                 axisPresetSliderContainer
                     .requireViewById<TextView>(R.id.clock_face_width_label)
+                    .setTextColor(color)
+                clockPresetGroupContainer
+                    .requireViewById<TextView>(R.id.clock_preset_group_label)
                     .setTextColor(color)
             },
             color = colorUpdateViewModel.colorOnSurfaceVariant,
@@ -413,6 +436,42 @@ object ClockFloatingSheetBinder {
                     viewModel.shouldShowPresetSlider.collect {
                         axisPresetSliderContainer.isVisible = it
                     }
+                }
+
+                launch {
+                    colorUpdateViewModel.systemColorsUpdated.collect {
+                        clockPresetGroupButtons.forEach {
+                            it.backgroundTintList =
+                                appContext.getColorStateList(
+                                    R.color.clock_style_button_background
+                                )
+                            it.setTextColor(
+                                appContext.getColorStateList(R.color.clock_style_button_label)
+                            )
+                        }
+                    }
+                }
+
+                launch {
+                    combine(
+                            viewModel.clockPresetGroupCount,
+                            viewModel.previewingClockPresetGroupIndex,
+                            viewModel.onClockFaceClicked,
+                            ::Triple,
+                        )
+                        .collect { (groupCount, groupIndex, onClockFaceClicked) ->
+                            // The toggle cycles, so every group needs a button of its own.
+                            clockPresetGroupContainer.isVisible =
+                                groupCount == clockPresetGroupButtons.size
+                            if (!clockPresetGroupContainer.isVisible) return@collect
+
+                            clockPresetGroupButtons.forEachIndexed { index, button ->
+                                button.setOnClickListener {
+                                    if (index != groupIndex) onClockFaceClicked?.invoke()
+                                }
+                            }
+                            clockPresetGroupToggle.check(clockPresetGroupButtons[groupIndex].id)
+                        }
                 }
 
                 launch {

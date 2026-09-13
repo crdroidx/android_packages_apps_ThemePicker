@@ -407,22 +407,6 @@ class ClockPickerViewModelTest {
         assertThat(onClockFaceClicked()).isNotNull()
     }
 
-    @Test
-    fun showClockFacePresetGroupIndexUpdateToast_emitsGroupIndex() = runTest {
-        val toastMessages = collectLastValue(underTest.showClockFacePresetGroupIndexUpdateToast)
-        val onClockFaceClicked = collectLastValue(underTest.onClockFaceClicked)
-
-        // Initial state, should not emit
-        assertThat(toastMessages()).isNull()
-
-        // Click to cycle through preset groups
-        onClockFaceClicked()?.invoke() // group 1
-        assertThat(toastMessages()).isEqualTo(1)
-
-        onClockFaceClicked()?.invoke() // group 0
-        assertThat(toastMessages()).isEqualTo(0)
-    }
-
     //// Clock size
     @Test
     fun previewingClockSize_whenCallingOnClockSizeSwitchChecked() = runTest {

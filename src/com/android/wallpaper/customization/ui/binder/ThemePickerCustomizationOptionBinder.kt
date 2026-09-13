@@ -876,24 +876,6 @@ constructor(private val defaultCustomizationOptionsBinder: DefaultCustomizationO
                                 )
                         }
                 }
-
-                launch {
-                    clockPickerViewModel.showClockFacePresetGroupIndexUpdateToast.collect {
-                        presetGroupIndex ->
-                        val clockStyle: String =
-                            rootView.resources.getString(
-                                if (presetGroupIndex == 0) R.string.clock_style_round
-                                else R.string.clock_style_sharp
-                            )
-                        val toastMessage: String =
-                            rootView.resources.getString(
-                                R.string.clock_style_update_toast,
-                                clockStyle,
-                            )
-                        Toast.makeText(rootView.context, toastMessage, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
             }
         }
     }

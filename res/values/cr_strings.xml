@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: crDroid Android Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+
+    <!-- Label for the buttons to change the clock style. [CHAR LIMIT=32] -->
+    <string name="clock_style_title">Clock style</string>
+</resources>

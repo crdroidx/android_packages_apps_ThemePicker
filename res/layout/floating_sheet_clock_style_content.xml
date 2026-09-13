@@ -85,7 +85,54 @@
             app:thumbHeight="@dimen/slider_thumb_height"
             app:labelBehavior="gone"
             android:theme="@style/Theme.Material3.DynamicColors.DayNight" />
+
+        <LinearLayout
+            android:id="@+id/clock_preset_group_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/clock_preset_group_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/clock_style_title"
+                android:textAppearance="@style/TextAppearance.DeviceDefault.Small.LabelMedium"
+                android:textColor="@color/system_on_surface_variant"
+                android:lineSpacingExtra="1sp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="@dimen/clock_axis_control_slider_container_margin_vertical" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/clock_preset_group_toggle"
+                style="@style/Widget.Material3Expressive.MaterialButtonGroup.Connected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="@dimen/clock_axis_control_slider_row_margin_vertical"
+                android:theme="@style/Theme.Material3.DynamicColors.DayNight"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/clock_preset_group_button_0"
+                    style="@style/SettingsLibButtonStyle.Expressive.Tonal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/clock_style_round" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/clock_preset_group_button_1"
+                    style="@style/SettingsLibButtonStyle.Expressive.Tonal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/clock_style_sharp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
 
