@@ -37,8 +37,8 @@
             android:layout_marginHorizontal="@dimen/floating_sheet_content_horizontal_padding"
             android:gravity="center"
             android:text="@string/wallpaper_color_subheader"
-            android:textColor="@color/system_on_surface"
-            android:textSize="12sp" />
+            android:textAppearance="@style/TextAppearance.SettingsLib.BodySmall"
+            android:textColor="@color/system_on_surface" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/colors_horizontal_list"
